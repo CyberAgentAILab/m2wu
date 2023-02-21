@@ -2,11 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-FULL_FEEDBACK = 'full'
-NOISY_FEEDBACK = 'noisy'
 
-
-def run_mwu(p_id, game, agents, n_iterations, outdir, feedback = FULL_FEEDBACK, random_strategy = False):
+def run_mwu(p_id, game, agents, n_iterations, outdir, feedback='full', random_strategy=False):
     csv_file_path = '{}/csv/seed_{}_exploitability.csv'.format(outdir, p_id)
     png_file_path = '{}/figure/seed_{}_exploitability.png'.format(outdir, p_id)
     exploitabilities = []
@@ -14,14 +11,14 @@ def run_mwu(p_id, game, agents, n_iterations, outdir, feedback = FULL_FEEDBACK, 
     index = []
     if random_strategy:
         for i_a, agent in enumerate(agents):
-            agent.strategy = random_init_strategy(game.payoff.shape[i_a])
-    for i_t in np.arange(0, n_iterations+1):
-        if feedback == FULL_FEEDBACK:
+            agent.strategy = random_init_strategy(game.utility.shape[i_a])
+    for i_t in np.arange(0, n_iterations + 1):
+        if feedback == 'full':
             strategies = [agent.strategy for agent in agents]
             utilities = game.full_feedback(strategies)
             for i_a, agent in enumerate(agents):
                 agent.update(utilities[i_a])
-        elif feedback == NOISY_FEEDBACK:
+        elif feedback == 'noisy':
             strategies = [agent.strategy for agent in agents]
             utilities = game.noisy_feedback(strategies)
             for i_a, agent in enumerate(agents):

@@ -57,7 +57,7 @@ def prepare_output_dir(args, user_specified_dir=None, argv=None, time_format='%Y
     with open(result_summary_path, 'a') as f:
         if argv is None:
             argv = sys.argv
-        s = '\n' + ' '.join(argv) + ' ' +str(outdir)
+        s = '\n' + ' '.join(argv) + ' ' + str(outdir)
         f.write(s)
 
     # Save all the arguments
@@ -89,20 +89,21 @@ def get_cpu_count():
     return mp.cpu_count()
 
 
-def load_payoff_array(payoff_path):
-    return np.loadtxt(payoff_path, delimiter=',')
+def load_utility_matrix(path):
+    return np.loadtxt(path, delimiter=',')
 
 
-def load_payoff_all_arrays(payoff_path):
-    payoffs = []
-    for payoff_file in glob.glob("{}/*".format(payoff_path)):
-        payoffs.append(np.loadtxt(payoff_file, delimiter=','))
-    return payoffs
+def load_utility_all_arrays(path):
+    utilities = []
+    for file in glob.glob("{}/*".format(path)):
+        utilities.append(np.loadtxt(file, delimiter=','))
+    return utilities
 
 
-def save_payoff_array(file_name, payoff):
-    np.savetxt(file_name, payoff, fmt='%.8f', delimiter=',')
+def save_utility_matrix(file_name, utility):
+    np.savetxt(file_name, utility, fmt='%.8f', delimiter=',')
 
-def set_random_seed(seed) :
+
+def set_random_seed(seed):
     np.random.seed(seed)
     random.seed(seed)

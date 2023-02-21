@@ -18,13 +18,13 @@ $ pip install -r requirements.txt
 ```
 
 ## Execution example
-In order to investigate the performance of M2WU in biased Rock-Paper-Scissors with full-information feedback, execute the following command:
+In order to investigate the performance of M2WU in biased Rock-Paper-Scissors with full feedback, execute the following command:
 ```bash
 $ python main.py --n_p 10 --n_i 100000 --arch m2wu --random_init_strategy --eta 0.1 --feedback full --mu 0.1
 $ python main.py --n_p 10 --n_i 100000 --arch m2wu --random_init_strategy --eta 0.1 --feedback full --mu 0.1 --update_freq 100 --dir_name update_ref
 ```
 
-To evaluate M2WU via an experiment in biased Rock-Paper-Scissors with noisy-information feedback, execute the following command:
+To evaluate M2WU via an experiment in biased Rock-Paper-Scissors with noisy feedback, execute the following command:
 ```bash
 $ python main.py --n_p 10 --n_i 1000000 --arch m2wu --noise_scale 0.1 --eta 0.001 --feedback noisy --mu 0.1
 $ python main.py --n_p 10 --n_i 1000000 --arch m2wu --noise_scale 0.1 --eta 0.001 --feedback noisy --mu 0.5 --update_freq 20000 --dir_name update_ref
