@@ -1,56 +1,39 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+
+from games.matrix_game import MatrixGame
+from runner import utils
+from runner.logger import Logger
 
 
-def run_mwu(p_id, game, agents, n_iterations, outdir, feedback='full', random_strategy=False):
-    csv_file_path = '{}/csv/seed_{}_exploitability.csv'.format(outdir, p_id)
-    pdf_file_path = '{}/figure/seed_{}_exploitability.pdf'.format(outdir, p_id)
-    exploitabilities = []
-    already_write_exploitabilities = False
-    index = []
-    if random_strategy:
-        for i_a, agent in enumerate(agents):
-            agent.strategy = random_init_strategy(game.utility.shape[i_a])
-    for i_t in np.arange(0, n_iterations + 1):
+def run_mwu(trial_id, game, T, seed, feedback, alg, params, dir_name):
+    # sed random seed
+    utils.set_random_seed(seed)
+
+    # initialize game and players
+    game = MatrixGame(utils.load_utility_matrix(game, trial_id))
+    players = [
+        alg(game.num_actions(0), **params),
+        alg(game.num_actions(1), **params)
+    ]
+    utils.save_utility_matrix('{}/csv/seed_{}_utility.csv'.format(dir_name, trial_id), game.utility)
+
+    # run each trial
+    logger = Logger()
+    for t in np.arange(T + 1):
         if feedback == 'full':
-            strategies = [agent.strategy for agent in agents]
+            strategies = [agent.strategy for agent in players]
             utilities = game.full_feedback(strategies)
-            for i_a, agent in enumerate(agents):
+            for i_a, agent in enumerate(players):
                 agent.update(utilities[i_a])
         elif feedback == 'noisy':
-            strategies = [agent.strategy for agent in agents]
+            strategies = [agent.strategy for agent in players]
             utilities = game.noisy_feedback(strategies)
-            for i_a, agent in enumerate(agents):
+            for i_a, agent in enumerate(players):
                 agent.update(utilities[i_a])
-        if i_t % 10 == 0 or i_t < 10:
-            index.append(i_t)
-            exploitabilities.append(game.calc_exploitability(strategies))
-        if i_t > 0 and i_t % int(10e5) == 0:
-            df = pd.DataFrame(exploitabilities, index=index)
-            if already_write_exploitabilities:
-                df.to_csv(csv_file_path, mode='a', header=False)
-            else:
-                df.to_csv(csv_file_path)
-            exploitabilities = []
-            index = []
-            already_write_exploitabilities = True
-            if p_id % 10 == 0:
-                print('p_id', p_id, ":", i_t, "iterations finished.")
-    df = pd.DataFrame(exploitabilities, index=index)
-    if already_write_exploitabilities:
-        df.to_csv(csv_file_path, mode='a', header=False)
-    else:
-        df.to_csv(csv_file_path)
-    df = pd.read_csv(csv_file_path, index_col=0)
-    df.plot()
-    plt.title('Exploitability')
-    plt.yscale("log")
-    plt.savefig(pdf_file_path)
-    plt.clf()
-    plt.close()
-
-
-def random_init_strategy(n_actions):
-    random_numbers = np.random.exponential(scale=1.0, size=n_actions)
-    return np.array(random_numbers / random_numbers.sum(), dtype=np.float64)
+        else:
+            raise RuntimeError('illegal feedback type')
+        exploitability = game.calc_exploitability(strategies)
+        logger['exploitability'].append(exploitability)
+        if t % 10000 == 0:
+            print('trial: {}, iteration: {}, exploitability: {}'.format(trial_id, t, exploitability))
+    return logger

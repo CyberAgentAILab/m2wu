@@ -17,15 +17,25 @@ To install the required dependencies, execute the following command:
 $ pip install -r requirements.txt
 ```
 
+### For Docker User
+Build the container:
+```bash
+$ docker build -t m2wu .
+```
+After build finished, run the container:
+```bash
+$ docker run -it m2wu
+```
+
 ## Execution example
 In order to investigate the performance of M2WU in biased Rock-Paper-Scissors with full feedback, execute the following command:
 ```bash
-$ python main.py --num_trials 10 --T 100000 --arch m2wu --random_init_strategy --eta 0.1 --feedback full --mu 0.1
-$ python main.py --num_trials 10 --T 100000 --arch m2wu --random_init_strategy --eta 0.1 --feedback full --mu 0.1 --update_freq 100 --dir_name update_ref
+$ python main.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1
+$ python main.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1 --update_freq 100
 ```
 
 To evaluate M2WU via an experiment in biased Rock-Paper-Scissors with noisy feedback, execute the following command:
 ```bash
-$ python main.py --num_trials 10 --T 1000000 --arch m2wu --noise_scale 0.1 --eta 0.001 --feedback noisy --mu 0.1
-$ python main.py --num_trials 10 --T 1000000 --arch m2wu --noise_scale 0.1 --eta 0.001 --feedback noisy --mu 0.5 --update_freq 20000 --dir_name update_ref
+$ python main.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.1
+$ python main.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.5 --update_freq 20000
 ```
