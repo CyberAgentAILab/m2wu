@@ -27,15 +27,15 @@ After build finished, run the container:
 $ docker run -it m2wu
 ```
 
-## Execution example
+## Run Experiments
 In order to investigate the performance of M2WU in biased Rock-Paper-Scissors with full feedback, execute the following command:
 ```bash
-$ python main.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1
-$ python main.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1 --update_freq 100
+$ python run_experiment.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1
+$ python run_experiment.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1 --update_freq 100
 ```
 
 To evaluate M2WU via an experiment in biased Rock-Paper-Scissors with noisy feedback, execute the following command:
 ```bash
-$ python main.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.1
-$ python main.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.5 --update_freq 20000
+$ python run_experiment.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.1
+$ python run_experiment.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.5 --update_freq 20000
 ```

@@ -5,7 +5,7 @@ from runner import utils
 from runner.logger import Logger
 
 
-def run_mwu(trial_id, game, T, seed, feedback, alg, params, dir_name):
+def run_mwu(trial_id, game, T, seed, feedback, alg, params):
     # sed random seed
     utils.set_random_seed(seed)
 
@@ -15,7 +15,6 @@ def run_mwu(trial_id, game, T, seed, feedback, alg, params, dir_name):
         alg(game.num_actions(0), **params),
         alg(game.num_actions(1), **params)
     ]
-    utils.save_utility_matrix('{}/csv/seed_{}_utility.csv'.format(dir_name, trial_id), game.utility)
 
     # run each trial
     logger = Logger()
@@ -33,7 +32,9 @@ def run_mwu(trial_id, game, T, seed, feedback, alg, params, dir_name):
         else:
             raise RuntimeError('illegal feedback type')
         exploitability = game.calc_exploitability(strategies)
-        logger['exploitability'].append(exploitability)
+        if t < 100 or t % max(1, T / int(1e6)) == 0:
+            logger['iteration'].append(t)
+            logger['exploitability'].append(exploitability)
         if t % 10000 == 0:
             print('trial: {}, iteration: {}, exploitability: {}'.format(trial_id, t, exploitability))
-    return logger
+    return logger, game.utility
