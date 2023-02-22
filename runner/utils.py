@@ -1,82 +1,16 @@
-import argparse
-import datetime
-import json
-import os
-import sys
-import tempfile
 import multiprocessing as mp
 import numpy as np
-import glob
-import random
 
 
-def prepare_output_dir(args, user_specified_dir=None, argv=None, time_format='%Y%m%dT%H%M%S%f'):
-    """Prepare a directory for outputting training results.
-    An output directory, which ends with the current datetime string,
-    is created. Then the following infomation is saved into the directory:
-        args.txt: command line arguments
-        command.txt: command itself
-        environ.txt: environmental variables
-    Additionally, if the current directory is under git control, the following
-    information is saved:
-        git-head.txt: result of `git rev-parse HEAD`
-        git-status.txt: result of `git status`
-        git-log.txt: result of `git log`
-        git-diff.txt: result of `git diff`
-    Args:
-        args (dict or argparse.Namespace): Arguments to save
-        user_specified_dir (str or None): If str is specified, the output
-            directory is created under that path. If not specified, it is
-            created as a new temporary directory instead.
-        argv (list or None): The list of command line arguments passed to a
-            script. If not specified, sys.argv is used instead.
-        time_format (str): Format used to represent the current datetime. The
-        default format is the basic format of ISO 8601.
-    Returns:
-        Path of the output directory created by this function (str).
-    """
+def set_random_seed(seed):
+    np.random.seed(seed)
 
-    time_str = datetime.datetime.now().strftime(time_format)
-    if user_specified_dir is not None:
-        if os.path.exists(user_specified_dir):
-            if not os.path.isdir(user_specified_dir):
-                raise RuntimeError(
-                    '{} is not a directory'.format(user_specified_dir))
-        dir_name = '{}_{}'.format(time_str, args.dir_name)
-        outdir = os.path.join(user_specified_dir, dir_name)
-        if os.path.exists(outdir):
-            raise RuntimeError('{} exists'.format(outdir))
-        else:
-            os.makedirs(outdir)
-            os.makedirs(outdir + '/csv')
-            os.makedirs(outdir + '/figure')
+
+def load_utility_matrix(game, id):
+    if 'random_utility' in game:
+        return np.loadtxt('utility/{}/utility{}.csv'.format(game, id), delimiter=',')
     else:
-        outdir = tempfile.mkdtemp(prefix=time_str)
-    result_summary_path = "{}/result_summary.txt".format(user_specified_dir)
-
-    with open(result_summary_path, 'a') as f:
-        if argv is None:
-            argv = sys.argv
-        s = '\n' + ' '.join(argv) + ' ' + str(outdir)
-        f.write(s)
-
-    # Save all the arguments
-    with open(os.path.join(outdir, 'args.txt'), 'w') as f:
-        if isinstance(args, argparse.Namespace):
-            args = vars(args)
-        f.write(json.dumps(args))
-
-    # Save all the environment variables
-    with open(os.path.join(outdir, 'environ.txt'), 'w') as f:
-        f.write(json.dumps(dict(os.environ)))
-
-    # Save the command
-    with open(os.path.join(outdir, 'command.txt'), 'w') as f:
-        if argv is None:
-            argv = sys.argv
-        f.write(' '.join(argv))
-
-    return outdir
+        return np.loadtxt('utility/{}.csv'.format(game), delimiter=',')
 
 
 def run_async_pool(n_process, run_func, inputs_list):
@@ -89,21 +23,5 @@ def get_cpu_count():
     return mp.cpu_count()
 
 
-def load_utility_matrix(path):
-    return np.loadtxt(path, delimiter=',')
-
-
-def load_utility_all_arrays(path):
-    utilities = []
-    for file in glob.glob("{}/*".format(path)):
-        utilities.append(np.loadtxt(file, delimiter=','))
-    return utilities
-
-
 def save_utility_matrix(file_name, utility):
     np.savetxt(file_name, utility, fmt='%.8f', delimiter=',')
-
-
-def set_random_seed(seed):
-    np.random.seed(seed)
-    random.seed(seed)

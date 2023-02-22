@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def run_mwu(p_id, game, agents, n_iterations, outdir, feedback='full', random_strategy=False):
     csv_file_path = '{}/csv/seed_{}_exploitability.csv'.format(outdir, p_id)
-    png_file_path = '{}/figure/seed_{}_exploitability.png'.format(outdir, p_id)
+    pdf_file_path = '{}/figure/seed_{}_exploitability.pdf'.format(outdir, p_id)
     exploitabilities = []
     already_write_exploitabilities = False
     index = []
@@ -46,7 +46,7 @@ def run_mwu(p_id, game, agents, n_iterations, outdir, feedback='full', random_st
     df.plot()
     plt.title('Exploitability')
     plt.yscale("log")
-    plt.savefig(png_file_path)
+    plt.savefig(pdf_file_path)
     plt.clf()
     plt.close()
 
