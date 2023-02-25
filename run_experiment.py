@@ -36,7 +36,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', default='biased_rps', type=str,
                         choices=['biased_rps', 'm_ne', *['random_utility/size{}'.format(s) for s in [25, 100]]], help='name of game')
-    parser.add_argument('--algorithm', type=str, choices=['m2wu', 'mwu', 'omwu'], help='learning algorithm')
+    parser.add_argument('--algorithm', type=str, choices=['m2wu', 'mwu', 'omwu'], required=True, help='learning algorithm')
     parser.add_argument('--num_trials', type=int, default=1, help='number of trials to run experiments')
     parser.add_argument('--T', type=int, default=10000, help='number of iterations')
     parser.add_argument('--feedback', type=str, default='full', choices=['full', 'noisy'], help='feedback type')
