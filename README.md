@@ -30,9 +30,22 @@ $ docker run -it m2wu
 ## Run Experiments
 In order to investigate the performance of M2WU in biased Rock-Paper-Scissors with full feedback, execute the following command:
 ```bash
-$ python run_experiment.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1
-$ python run_experiment.py --num_trials 10 --T 100000 --feedback full --algorithm m2wu --random_init_strategy --eta 0.1 --mu 0.1 --update_freq 100
+$ python run_experiment.py --num_trials 10 --T 100000 --random_init_strategy --algorithm m2wu
+$ python run_experiment.py --num_trials 10 --T 100000 --random_init_strategy --algorithm m2wu --update_freq 100
 ```
+In this experiment, the following options can be specified:
+* `--game`: Name of a matrix game. The default value is `biased_rps`.
+* `--algorithm`: Learning algorithm.
+* `--num_trials`: Number of trials to run experiments. The default value is `1`.
+* `--T`: Number of iterations. The default value is `10000`.
+* `--feedback`: Feedback type given to players. The default value is `full`.
+* `--seed`: Random seed. The default value is `0`.
+* `--random_init_strategy`: Whether to generate the initial strategy uniformly at random. The default value is `False`.
+* `--eta`: Learning rate. The default value is `0.1`.
+* `--decay`: Whether to use decreasing learning rates. The default value is `False`.
+* `--mu`: Mutation rate for M2WU. The default value is `0.1`.
+* `--update_freq`: Update the reference strategies in M2WU every N iterations. The value of `None` means that the reference strategies are not updated. The default value is `None`.
+
 
 To evaluate M2WU via an experiment in biased Rock-Paper-Scissors with noisy feedback, execute the following command:
 ```bash
