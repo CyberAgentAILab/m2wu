@@ -52,3 +52,14 @@ To evaluate M2WU via an experiment in biased Rock-Paper-Scissors with noisy feed
 $ python run_experiment.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.1
 $ python run_experiment.py --num_trials 10 --T 1000000 --feedback noisy --algorithm m2wu --eta 0.001 --mu 0.5 --update_freq 20000
 ```
+
+## Citation
+If you use our code in your work, please cite our paper:
+```
+@article{abe2022m2wu,
+  title={Last-Iterate Convergence with Full and Noisy Feedback in Two-Player Zero-Sum Games},
+  author={Abe, Kenshi and Ariu, Kaito and Sakamoto, Mitsuki and Toyoshima, Kentaro and Iwasaki, Atsushi},
+  journal={arXiv preprint arXiv:2208.09855},
+  year={2022}
+}
+```
